@@ -1,0 +1,44 @@
+* Installing
+** Dependencies
+*** Qt 5.3
+
+*** Installing OrgModeParser
+
+#+begin_src bash
+git clone https://github.com/mirkoboehm/OrgModeParser.git
+mkdir OrgModeParser/build
+cd OrgModeParser/build
+cmake ../
+make
+make install
+
+# Command added by me to make it work
+cp orgmodeparser_export.h /usr/local/include # unix only
+cp ../Parser/*.hpp /usr/local/include # unix only
+#+end_src
+
+source: https://github.com/mirkoboehm/OrgModeParser
+
+** Nova todos
+
+#+begin_src bash
+git clone git@github.com:tbinetruy/nova-todos.git
+cd nova-todos
+mkdir build && cd build
+cmake .. && make
+#+end_src
+
+* Running
+
+From repo root:
+
+#+begin_src bash
+cd build
+./todos foo bar
+#+end_src
+
+Where:
+
+- *foo* by /file name/
+- *bar* by user initial in caps, eg: /JM/, /KK/, /JB/
+
