@@ -25,16 +25,26 @@
 #include <Headline.h>
 #include <FindElements.h>
 
+#include "todos.h"
+
 using namespace OrgMode;
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    if (argc !=2) {
+    auto arguments = QCoreApplication::arguments();
+
+    if (argc < 2) {
         wcerr << "No file specified!" << endl;
         return 1;
     }
+
+    if (argc < 3) {
+      wcerr << "No user specified" << endl;
+      return 1;
+    }
+
     auto const inputFile = QString::fromLocal8Bit(argv[1]);
     Parser parser;
     QFile input(inputFile);
@@ -46,9 +56,10 @@ int main(int argc, char *argv[])
     OrgElement::Pointer orgfile = parser.parse(&stream, inputFile);
     auto const headlines = findElements<Headline>(orgfile);
     wcout << "Number of headlines: " << headlines.count() << endl;
-    auto isTODO = [](const Headline::Pointer& element) {
-        return element->caption().startsWith(QStringLiteral("TODO"));
+    auto isTODO = [&](const Headline::Pointer& element) {
+      return element->caption().startsWith(arguments[2]);
     };
+
     auto const todos = findElements<Headline>(orgfile, isTODO);
     wcout << "Number of TODOs: " << todos.count() << endl;
 
