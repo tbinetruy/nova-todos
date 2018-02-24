@@ -1,0 +1,8 @@
+#!/bin/bash
+
+source ~/.bashrc
+filename=nova-org-files.dump
+find /home/thomas/Dropbox /home/thomas/code -type f -name "*.org" -exec cat {} \; > $filename
+./build/todos $filename "$@"
+rm $filename
+
