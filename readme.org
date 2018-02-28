@@ -42,3 +42,6 @@ Where:
 - *foo* by /file name/
 - *bar* by user initial in caps, eg: /JM/, /KK/, /JB/
 
+* Dynamic linking of OrgModeParser
+
+https://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/

@@ -1,6 +1,14 @@
 #ifndef TODOS
 #define TODOS
 
-int main2(QString inputFile, QString todoState);
+#include <QCoreApplication>
+#include <QFile>
+#include <QTextStream>
+
+#include <Parser.h>
+#include <Headline.h>
+#include <FindElements.h>
+
+QList<QSharedPointer<OrgMode::Headline>> main2(QString inputFile, QString todoState);
 
 #endif

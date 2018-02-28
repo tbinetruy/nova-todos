@@ -22,9 +22,10 @@ INCLUDEPATH += /usr/local/lib/
 INCLUDEPATH += /usr/local/include/OrgModeParser
 LIBS += -L/usr/local/lib/ -lOrgModeParser
 
-HEADERS += BackEnd.h todos.h
+HEADERS += BackEnd.h todos.h TodoObject.h
 SOURCES += BackEnd.cpp \
            main.cpp \
            todos.cpp \
+           TodoObject.cpp \
 
 QT += quick

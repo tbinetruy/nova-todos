@@ -17,26 +17,17 @@
  */
 
 #include <iostream>
-#include <QCoreApplication>
-#include <QFile>
-#include <QTextStream>
-
-#include <Parser.h>
-#include <Headline.h>
-#include <FindElements.h>
-
 #include "todos.h"
 
 using namespace OrgMode;
 using namespace std;
 
-int main2(QString inputFile, QString todoState)
+QList<QSharedPointer<Headline>> main2(QString inputFile, QString todoState)
 {
     Parser parser;
     QFile input(inputFile);
     if (!input.open(QIODevice::ReadOnly)) {
         wcerr << "Unable to open file" << inputFile.toStdWString() << "!" << endl;
-        return 1;
     }
     QTextStream stream(&input);
     OrgElement::Pointer orgfile = parser.parse(&stream, inputFile);
@@ -49,5 +40,5 @@ int main2(QString inputFile, QString todoState)
     auto const todos = findElements<Headline>(orgfile, isTODO);
     wcout << "Number of TODOs: " << todos.count() << endl;
 
-    return todos.count();
+    return todos;
 }

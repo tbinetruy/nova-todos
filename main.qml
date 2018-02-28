@@ -42,31 +42,35 @@ ApplicationWindow {
       //a button in the middle of the content area
       Button {
           Layout.preferredWidth: parent.width/2
-          text: backend.todoCount
-          onClicked: backend.countTodos()
-          anchors.verticalCenter: parent.verticalCenter
+          text: 'Get todos for:'
+          onClicked: backend.getTodos()
+          anchors.bottom: parent.bottom
           anchors.left: parent.left
       }
 
       TextField {
+          id: searchFor
           Layout.preferredWidth: parent.width/2
           text: backend.userName
           placeholderText: qsTr("User name")
 
-          anchors.verticalCenter: parent.verticalCenter
+          anchors.bottom: parent.bottom
           anchors.right: parent.right
           onTextChanged: backend.userName = text
       }
     }
 
     ListView {
-        width: 100; height: 100
+        height: parent.height - 100
+        anchors.top : parent.top
+        anchors.left : parent.left
+        anchors.right : parent.right
 
         model: backend.todoList
         delegate: Rectangle {
             height: 25
             width: 100
-            Text { text: modelData }
+            Text { text: modelData.headline }
         }
     }
 }
