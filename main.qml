@@ -58,4 +58,15 @@ ApplicationWindow {
           onTextChanged: backend.userName = text
       }
     }
+
+    ListView {
+        width: 100; height: 100
+
+        model: backend.todoList
+        delegate: Rectangle {
+            height: 25
+            width: 100
+            Text { text: modelData }
+        }
+    }
 }

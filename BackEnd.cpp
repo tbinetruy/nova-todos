@@ -3,6 +3,13 @@
 BackEnd::BackEnd(QObject *parent) :
     QObject(parent)
 {
+  m_todoList.append("foo");
+  m_todoList.append("bar");
+}
+
+QStringList BackEnd::todoList()
+{
+  return m_todoList;
 }
 
 QString BackEnd::todoCount()
@@ -22,6 +29,15 @@ void BackEnd::countTodos()
   auto const todoCount = main2(inputFile, m_userName);
 
   this->setTodoCount(QString::number(todoCount));
+}
+
+void BackEnd::setTodoList(QStringList &todoList)
+{
+  if (todoList == m_todoList)
+    return;
+
+  m_todoList = todoList;
+  emit todoListChanged();
 }
 
 void BackEnd::setUserName(const QString &userName)
