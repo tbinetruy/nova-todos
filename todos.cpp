@@ -30,22 +30,8 @@
 using namespace OrgMode;
 using namespace std;
 
-int main(int argc, char *argv[])
+int main2(QString inputFile, QString todoState)
 {
-    QCoreApplication a(argc, argv);
-    auto arguments = QCoreApplication::arguments();
-
-    if (argc < 2) {
-        wcerr << "No file specified!" << endl;
-        return 1;
-    }
-
-    if (argc < 3) {
-      wcerr << "No user specified" << endl;
-      return 1;
-    }
-
-    auto const inputFile = QString::fromLocal8Bit(argv[1]);
     Parser parser;
     QFile input(inputFile);
     if (!input.open(QIODevice::ReadOnly)) {
@@ -57,10 +43,11 @@ int main(int argc, char *argv[])
     auto const headlines = findElements<Headline>(orgfile);
     wcout << "Number of headlines: " << headlines.count() << endl;
     auto isTODO = [&](const Headline::Pointer& element) {
-      return element->caption().startsWith(arguments[2]);
+      return element->caption().startsWith(todoState);
     };
 
     auto const todos = findElements<Headline>(orgfile, isTODO);
     wcout << "Number of TODOs: " << todos.count() << endl;
 
+    return todos.count();
 }
