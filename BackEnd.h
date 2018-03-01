@@ -4,12 +4,14 @@
 #include <iostream>
 #include <QObject>
 #include <QString>
+#include <QStringRef>
+#include <QDate>
 #include "todos.h"
 #include "TodoObject.h"
 
 class BackEnd : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
     Q_PROPERTY(QString todoCount READ todoCount WRITE setTodoCount NOTIFY todoCountChanged)
     Q_PROPERTY(QList<QObject*> todoList READ todoList WRITE setTodoList NOTIFY todoListChanged)

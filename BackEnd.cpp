@@ -30,8 +30,26 @@ void BackEnd::getTodos()
   for(int i = 0; i < headlines.count(); i++) {
     auto currentTodo = new TodoObject();
     currentTodo->setHeadline(headlines[i]->caption());
-
     headlineList.append(currentTodo);
+
+    auto headline = headlines[i];
+    auto children = headline->children();
+    if(children.length() > 0) {
+      auto firstChild = children[0]->line();
+      auto scheduledKeyword = QString::fromUtf8("SCHEDULED: ");
+      bool isTodoScheduled = firstChild.contains(scheduledKeyword);
+
+      if(isTodoScheduled) {
+        firstChild.remove(0, firstChild.indexOf(scheduledKeyword) + scheduledKeyword.length());
+        auto year = firstChild.midRef(1, 4).toInt();
+        auto month = firstChild.midRef(6, 2).toInt();
+        auto day = firstChild.midRef(9, 2).toInt();
+
+        auto todoDueDate = QDate(year, month, day);
+
+        currentTodo->setDueDate(todoDueDate);
+      }
+    }
   }
 
   this->setTodoList(headlineList);

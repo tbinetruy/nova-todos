@@ -6,8 +6,8 @@ import io.qt.examples.backend 1.0
 
 ApplicationWindow {
     id: root
-    width: 300
-    height: 480
+    width: Screen.desktopAvailableWidth
+    height: Screen.desktopAvailableHeight
     visible: true
 
     BackEnd {
@@ -65,12 +65,32 @@ ApplicationWindow {
         anchors.top : parent.top
         anchors.left : parent.left
         anchors.right : parent.right
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
 
         model: backend.todoList
-        delegate: Rectangle {
+        delegate: RowLayout {
+            id: todoLayout
             height: 25
-            width: 100
-            Text { text: modelData.headline }
+            width: parent.width
+            spacing: 6
+
+            Text {
+                height: 25
+                Layout.preferredWidth: parent.width * 4/5
+                text: modelData.headline
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+            }
+
+            Text {
+                height: 25
+                Layout.preferredWidth: parent.width * 1/5
+                text: modelData.dueDate
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                horizontalAlignment: Text.AlignRight
+            }
         }
     }
 }
