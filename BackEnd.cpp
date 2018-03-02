@@ -20,12 +20,17 @@ QString BackEnd::userName()
     return m_userName;
 }
 
+bool dtcomp(TodoObject* left, TodoObject* right) {
+  return left->dueDate() < right->dueDate();
+}
+
 void BackEnd::getTodos()
 {
   auto const inputFile = QString::fromUtf8("dump.org");
 
   auto const headlines = main2(inputFile, m_userName);
-  QList<QObject*> headlineList;
+  QList<TodoObject*> headlineList;
+  QList<QObject*> _headlineList;
 
   for(int i = 0; i < headlines.count(); i++) {
     auto currentTodo = new TodoObject();
@@ -52,13 +57,26 @@ void BackEnd::getTodos()
     }
   }
 
-  this->setTodoList(headlineList);
+  std::sort(headlineList.begin(), headlineList.end(), dtcomp);
+
+  for(int i = 0; i < headlineList.count(); i++) {
+    _headlineList.append(headlineList[i]);
+  }
+
+
+  this->setTodoList(_headlineList);
 }
+
 
 void BackEnd::setTodoList(QList<QObject*> &todoList)
 {
   if (todoList == m_todoList)
     return;
+
+  //for(int i = 0; i < todoList.length(); i++) {
+  //  foo.append(todoList[i]);
+  //}
+
 
   m_todoList = todoList;
   emit todoListChanged();

@@ -1,5 +1,6 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.3
+import QtQuick.Controls 1.4
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.2
 import io.qt.examples.backend 1.0
@@ -15,7 +16,7 @@ ApplicationWindow {
     }
 
     //title of the application
-    title: qsTr("Hello World")
+    title: qsTr("Nova Todos")
 
     //menu containing two menu items
     menuBar: MenuBar {
@@ -35,62 +36,77 @@ ApplicationWindow {
     //Content Area
 
     RowLayout {
-    id: layout
-    anchors.fill: parent
-    spacing: 6
+        id: layout
+        width: parent.width
+        height: 50
+        spacing: 6
+        anchors.bottom: parent.bottom
 
-      //a button in the middle of the content area
-      Button {
-          Layout.preferredWidth: parent.width/2
-          text: 'Get todos for:'
-          onClicked: backend.getTodos()
-          anchors.bottom: parent.bottom
-          anchors.left: parent.left
-      }
+        //a button in the middle of the content area
+        Button {
+            Layout.preferredWidth: parent.width/2
+            text: 'Get todos for:'
+            onClicked: backend.getTodos()
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+        }
 
-      TextField {
-          id: searchFor
-          Layout.preferredWidth: parent.width/2
-          text: backend.userName
-          placeholderText: qsTr("User name")
+        TextField {
+            id: searchFor
+            Layout.preferredWidth: parent.width/2
+            text: backend.userName
+            placeholderText: qsTr("User name")
 
-          anchors.bottom: parent.bottom
-          anchors.right: parent.right
-          onTextChanged: backend.userName = text
-      }
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            onTextChanged: backend.userName = text
+        }
     }
 
-    ListView {
-        height: parent.height - 100
-        anchors.top : parent.top
-        anchors.left : parent.left
-        anchors.right : parent.right
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
+    TabView {
+        anchors.fill: parent
+        anchors.bottomMargin: 75
+        Tab {
+            title: 'Scheduled todos'
 
-        model: backend.todoList
-        delegate: RowLayout {
-            id: todoLayout
-            height: 25
-            width: parent.width
-            spacing: 6
+            ListView {
+                height: parent.height - 100
+                anchors.top : parent.top
+                anchors.left : parent.left
+                anchors.right : parent.right
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
 
-            Text {
-                height: 25
-                Layout.preferredWidth: parent.width * 4/5
-                text: modelData.headline
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
+                model: backend.todoList
+                delegate: RowLayout {
+                    id: todoLayout
+                    height: 25
+                    width: parent.width
+                    spacing: 6
+
+                    Text {
+                        height: 25
+                        Layout.preferredWidth: parent.width * 4/5
+                        text: modelData.headline
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                    }
+
+                    Text {
+                        height: 25
+                        Layout.preferredWidth: parent.width * 1/5
+                        text: modelData.dueDate
+                        anchors.bottom: parent.bottom
+                        anchors.right: parent.right
+                        horizontalAlignment: Text.AlignRight
+                    }
+                }
             }
+        }
 
-            Text {
-                height: 25
-                Layout.preferredWidth: parent.width * 1/5
-                text: modelData.dueDate
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                horizontalAlignment: Text.AlignRight
-            }
+        Tab {
+            title: "Other todos"
+            Rectangle { color: "blue" }
         }
     }
 }

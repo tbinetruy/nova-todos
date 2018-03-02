@@ -6,6 +6,7 @@
 #include <QString>
 #include <QStringRef>
 #include <QDate>
+#include <QtAlgorithms>
 #include "todos.h"
 #include "TodoObject.h"
 
