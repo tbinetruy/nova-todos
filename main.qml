@@ -77,7 +77,7 @@ ApplicationWindow {
                 anchors.leftMargin: 10
                 anchors.rightMargin: 10
 
-                model: backend.todoList
+                model: backend.scheduledTodoList
                 delegate: RowLayout {
                     id: todoLayout
                     height: 25
@@ -106,7 +106,39 @@ ApplicationWindow {
 
         Tab {
             title: "Other todos"
-            Rectangle { color: "blue" }
+            ListView {
+                height: parent.height - 100
+                anchors.top : parent.top
+                anchors.left : parent.left
+                anchors.right : parent.right
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
+
+                model: backend.todoList
+                delegate: RowLayout {
+                    id: todoLayout
+                    height: 25
+                    width: parent.width
+                    spacing: 6
+
+                    Text {
+                        height: 25
+                        Layout.preferredWidth: parent.width * 4/5
+                        text: modelData.headline
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                    }
+
+                    Text {
+                        height: 25
+                        Layout.preferredWidth: parent.width * 1/5
+                        text: modelData.dueDate
+                        anchors.bottom: parent.bottom
+                        anchors.right: parent.right
+                        horizontalAlignment: Text.AlignRight
+                    }
+                }
+            }
         }
     }
 }

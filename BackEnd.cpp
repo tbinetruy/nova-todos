@@ -5,6 +5,11 @@ BackEnd::BackEnd(QObject *parent) :
 {
 }
 
+QList<QObject*> BackEnd::scheduledTodoList()
+{
+  return m_scheduledTodoList;
+}
+
 QList<QObject*> BackEnd::todoList()
 {
   return m_todoList;
@@ -31,6 +36,7 @@ void BackEnd::getTodos()
   auto const headlines = main2(inputFile, m_userName);
   QList<TodoObject*> headlineList; // need to sort by date
   QList<QObject*> _headlineList; // FIX => loooks like needed to communicate with QML, need to look int
+  QList<QObject*> _scheduledHeadlineList; // FIX => loooks like needed to communicate with QML, need to look int
 
   // loop through headlines and find todos
   for(int i = 0; i < headlines.count(); i++) {
@@ -66,14 +72,26 @@ void BackEnd::getTodos()
 
   // store in QList<QObject*>
   for(int i = 0; i < headlineList.count(); i++) {
-    _headlineList.append(headlineList[i]);
+    if(headlineList[i]->dueDate().isNull())
+      _headlineList.append(headlineList[i]);
+    else
+      _scheduledHeadlineList.append(headlineList[i]);
   }
 
 
   // call setter
   this->setTodoList(_headlineList);
+  this->setScheduledTodoList(_scheduledHeadlineList);
 }
 
+void BackEnd::setScheduledTodoList(QList<QObject*> &todoList)
+{
+  if (todoList == m_scheduledTodoList)
+    return;
+
+  m_scheduledTodoList = todoList;
+  emit scheduledTodoListChanged();
+}
 
 void BackEnd::setTodoList(QList<QObject*> &todoList)
 {
