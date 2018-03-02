@@ -80,25 +80,28 @@ ApplicationWindow {
                 model: backend.scheduledTodoList
                 delegate: RowLayout {
                     id: todoLayout
-                    height: 25
                     width: parent.width
                     spacing: 6
+                    height: modelData.dueDate.toLocaleString() == "" ? 60 : 25
+                    anchors.bottomMargin: modelData.dueDate.toLocaleString() == "" ? 40 : 0
 
                     Text {
-                        height: 25
-                        Layout.preferredWidth: parent.width * 4/5
+                        height: parent.height
+                        Layout.preferredWidth: parent.width * 5/5
                         text: modelData.headline
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
-                    }
+                        font.pixelSize: modelData.dueDate.toLocaleString() == "" ? 25 : 15
+                        anchors.leftMargin: modelData.dueDate.toLocaleString() == "" ? 40 : 0
+                        anchors.bottomMargin: modelData.dueDate.toLocaleString() == "" ? 10 : 0
 
-                    Text {
-                        height: 25
-                        Layout.preferredWidth: parent.width * 1/5
-                        text: modelData.dueDate
-                        anchors.bottom: parent.bottom
-                        anchors.right: parent.right
-                        horizontalAlignment: Text.AlignRight
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onEntered: parent.color = "green"
+                            onExited: parent.color = "black"
+                            onClicked: parent.font.strikeout ? parent.font.strikeout = false : parent.font.strikeout = true
+                        }
                     }
                 }
             }
@@ -115,28 +118,10 @@ ApplicationWindow {
                 anchors.rightMargin: 10
 
                 model: backend.todoList
-                delegate: RowLayout {
-                    id: todoLayout
+                delegate: Text {
                     height: 25
-                    width: parent.width
-                    spacing: 6
-
-                    Text {
-                        height: 25
-                        Layout.preferredWidth: parent.width * 4/5
-                        text: modelData.headline
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-                    }
-
-                    Text {
-                        height: 25
-                        Layout.preferredWidth: parent.width * 1/5
-                        text: modelData.dueDate
-                        anchors.bottom: parent.bottom
-                        anchors.right: parent.right
-                        horizontalAlignment: Text.AlignRight
-                    }
+                    Layout.preferredWidth: parent.width * 4/5
+                    text: modelData.headline
                 }
             }
         }

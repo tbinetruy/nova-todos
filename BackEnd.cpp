@@ -35,8 +35,8 @@ void BackEnd::getTodos()
 
   auto const headlines = main2(inputFile, m_userName);
   QList<TodoObject*> headlineList; // need to sort by date
-  QList<QObject*> _headlineList; // FIX => loooks like needed to communicate with QML, need to look int
-  QList<QObject*> _scheduledHeadlineList; // FIX => loooks like needed to communicate with QML, need to look int
+  QList<QObject*> _headlineList;
+  QList<QObject*> _scheduledHeadlineList;
 
   // loop through headlines and find todos
   for(int i = 0; i < headlines.count(); i++) {
@@ -72,10 +72,25 @@ void BackEnd::getTodos()
 
   // store in QList<QObject*>
   for(int i = 0; i < headlineList.count(); i++) {
-    if(headlineList[i]->dueDate().isNull())
+    // check if todo has due date
+    if(headlineList[i]->dueDate().isNull()) {
       _headlineList.append(headlineList[i]);
-    else
+    } else {
+      auto currentTodo = headlineList[i];
+      if(i > 0) {
+        auto previousTodo = headlineList[i - 1];
+        if(currentTodo->dueDate() > previousTodo->dueDate()) {
+          auto currentDateHeadline = new TodoObject();
+          currentDateHeadline->setHeadline(currentTodo->dueDate().toString());
+
+          auto date = currentTodo->dueDate().toString();
+          // currentTodo->setHeadline(headlines[i]->caption());
+          _scheduledHeadlineList.append(currentDateHeadline);
+        }
+      }
+
       _scheduledHeadlineList.append(headlineList[i]);
+    }
   }
 
 
