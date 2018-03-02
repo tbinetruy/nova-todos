@@ -29,9 +29,10 @@ void BackEnd::getTodos()
   auto const inputFile = QString::fromUtf8("dump.org");
 
   auto const headlines = main2(inputFile, m_userName);
-  QList<TodoObject*> headlineList;
-  QList<QObject*> _headlineList;
+  QList<TodoObject*> headlineList; // need to sort by date
+  QList<QObject*> _headlineList; // FIX => loooks like needed to communicate with QML, need to look int
 
+  // loop through headlines and find todos
   for(int i = 0; i < headlines.count(); i++) {
     auto currentTodo = new TodoObject();
     currentTodo->setHeadline(headlines[i]->caption());
@@ -39,11 +40,14 @@ void BackEnd::getTodos()
 
     auto headline = headlines[i];
     auto children = headline->children();
+
+    // check if todo has children
     if(children.length() > 0) {
       auto firstChild = children[0]->line();
       auto scheduledKeyword = QString::fromUtf8("SCHEDULED: ");
       bool isTodoScheduled = firstChild.contains(scheduledKeyword);
 
+      // check if todo is scheduled
       if(isTodoScheduled) {
         firstChild.remove(0, firstChild.indexOf(scheduledKeyword) + scheduledKeyword.length());
         auto year = firstChild.midRef(1, 4).toInt();
@@ -57,13 +61,16 @@ void BackEnd::getTodos()
     }
   }
 
+  // sort by date
   std::sort(headlineList.begin(), headlineList.end(), dtcomp);
 
+  // store in QList<QObject*>
   for(int i = 0; i < headlineList.count(); i++) {
     _headlineList.append(headlineList[i]);
   }
 
 
+  // call setter
   this->setTodoList(_headlineList);
 }
 
@@ -72,11 +79,6 @@ void BackEnd::setTodoList(QList<QObject*> &todoList)
 {
   if (todoList == m_todoList)
     return;
-
-  //for(int i = 0; i < todoList.length(); i++) {
-  //  foo.append(todoList[i]);
-  //}
-
 
   m_todoList = todoList;
   emit todoListChanged();
