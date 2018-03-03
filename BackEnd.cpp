@@ -3,6 +3,7 @@
 BackEnd::BackEnd(QObject *parent) :
     QObject(parent)
 {
+  m_rootFolder = QString::fromUtf8("/home/thomas/");
 }
 
 QList<QObject*> BackEnd::scheduledTodoList()
@@ -31,38 +32,46 @@ bool dtcomp(TodoObject* left, TodoObject* right) {
 
 void BackEnd::getTodos()
 {
-  auto const inputFile = QString::fromUtf8("dump.org");
-
-  auto const headlines = main2(inputFile, m_userName);
   QList<TodoObject*> headlineList; // need to sort by date
   QList<QObject*> _headlineList;
   QList<QObject*> _scheduledHeadlineList;
 
-  // loop through headlines and find todos
-  for(int i = 0; i < headlines.count(); i++) {
-    auto currentTodo = new TodoObject();
-    currentTodo->setHeadline(headlines[i]->caption());
-    headlineList.append(currentTodo);
+  QDirIterator it("/home/thomas/", QStringList() << "*.org", QDir::Files, QDirIterator::Subdirectories);
+  while (it.hasNext()) {
+    it.next();
 
-    auto headline = headlines[i];
-    auto children = headline->children();
+    auto path = it.filePath().toUtf8().constData();
 
-    // check if todo has children
-    if(children.length() > 0) {
-      auto firstChild = children[0]->line();
-      auto scheduledKeyword = QString::fromUtf8("SCHEDULED: ");
-      bool isTodoScheduled = firstChild.contains(scheduledKeyword);
+    QString const inputFile = path;
 
-      // check if todo is scheduled
-      if(isTodoScheduled) {
-        firstChild.remove(0, firstChild.indexOf(scheduledKeyword) + scheduledKeyword.length());
-        auto year = firstChild.midRef(1, 4).toInt();
-        auto month = firstChild.midRef(6, 2).toInt();
-        auto day = firstChild.midRef(9, 2).toInt();
+    auto const headlines = main2(inputFile, m_userName);
 
-        auto todoDueDate = QDate(year, month, day);
+    // loop through headlines and find todos
+    for(int i = 0; i < headlines.count(); i++) {
+      auto currentTodo = new TodoObject();
+      currentTodo->setHeadline(headlines[i]->caption());
+      headlineList.append(currentTodo);
 
-        currentTodo->setDueDate(todoDueDate);
+      auto headline = headlines[i];
+      auto children = headline->children();
+
+      // check if todo has children
+      if(children.length() > 0) {
+        auto firstChild = children[0]->line();
+        auto scheduledKeyword = QString::fromUtf8("SCHEDULED: ");
+        bool isTodoScheduled = firstChild.contains(scheduledKeyword);
+
+        // check if todo is scheduled
+        if(isTodoScheduled) {
+          firstChild.remove(0, firstChild.indexOf(scheduledKeyword) + scheduledKeyword.length());
+          auto year = firstChild.midRef(1, 4).toInt();
+          auto month = firstChild.midRef(6, 2).toInt();
+          auto day = firstChild.midRef(9, 2).toInt();
+
+          auto todoDueDate = QDate(year, month, day);
+
+          currentTodo->setDueDate(todoDueDate);
+        }
       }
     }
   }
@@ -92,7 +101,6 @@ void BackEnd::getTodos()
       _scheduledHeadlineList.append(headlineList[i]);
     }
   }
-
 
   // call setter
   this->setTodoList(_headlineList);
