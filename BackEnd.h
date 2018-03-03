@@ -41,7 +41,7 @@ signals:
     void todoCountChanged();
     void todoListChanged();
     void scheduledTodoListChanged();
-    voir rootFolderChanged();
+    void rootFolderChanged();
 
 private:
     QString m_userName;

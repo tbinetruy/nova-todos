@@ -1,6 +1,7 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.3
 import QtQuick.Controls 1.4
+import QtQuick.Dialogs 1.3
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.2
 import io.qt.examples.backend 1.0
@@ -18,13 +19,26 @@ ApplicationWindow {
     //title of the application
     title: qsTr("Nova Todos")
 
+    FileDialog {
+        id: fileDialog
+        selectFolder: true
+        onAccepted: {
+            backend.rootFolder = fileUrl.toString().substring(7, fileUrl.toString().length)
+            if (fileDialog.selectExisting) {
+                document.fileUrl = fileUrl
+            } else {
+                document.saveAs(fileUrl, selectedNameFilter)
+            }
+        }
+    }
+
     //menu containing two menu items
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
             MenuItem {
                 text: qsTr("&Open")
-                onTriggered: console.log("Open action triggered");
+                onTriggered: fileDialog.open()
             }
             MenuItem {
                 text: qsTr("Exit")

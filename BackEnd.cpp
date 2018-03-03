@@ -11,6 +11,11 @@ QList<QObject*> BackEnd::scheduledTodoList()
   return m_scheduledTodoList;
 }
 
+QString BackEnd::rootFolder()
+{
+  return m_rootFolder;
+}
+
 QList<QObject*> BackEnd::todoList()
 {
   return m_todoList;
@@ -36,7 +41,7 @@ void BackEnd::getTodos()
   QList<QObject*> _headlineList;
   QList<QObject*> _scheduledHeadlineList;
 
-  QDirIterator it("/home/thomas/", QStringList() << "*.org", QDir::Files, QDirIterator::Subdirectories);
+  QDirIterator it(this->rootFolder(), QStringList() << "*.org", QDir::Files, QDirIterator::Subdirectories);
   while (it.hasNext()) {
     it.next();
 
@@ -123,6 +128,15 @@ void BackEnd::setTodoList(QList<QObject*> &todoList)
 
   m_todoList = todoList;
   emit todoListChanged();
+}
+
+void BackEnd::setRootFolder(const QString &rootFolder)
+{
+  if (rootFolder == m_rootFolder)
+    return;
+
+  m_rootFolder = rootFolder;
+  emit rootFolderChanged();
 }
 
 void BackEnd::setUserName(const QString &userName)
